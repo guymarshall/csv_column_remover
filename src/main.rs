@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         panic!("File does not exist.");
     }
 
-    let mut reader: Reader<File> = Reader::from_path(filename)?;
+    let mut reader: Reader<File> = Reader::from_path(&filename)?;
     let headers: Vec<String> = reader
         .headers()?
         .iter()
@@ -38,8 +38,24 @@ fn main() -> Result<(), Box<dyn Error>> {
         false => panic!("Header does not exist!"),
     };
     // work out index of header_choice in headers
+    let index: usize = headers
+        .iter()
+        .position(|header: &String| header == &header_choice)
+        .expect("name was already validated to exist");
+    println!("Index: {index}");
     // calculate lines of file
+    let line_count: usize = reader.records().count();
+    println!("Number of lines (iterator): {line_count}");
     // for each line of file (ignoring first line (headers)):
+    let mut reader: Reader<File> = Reader::from_path(&filename)?;
+    reader
+        .records()
+        .for_each(|record: Result<csv::StringRecord, csv::Error>| {
+            let record: csv::StringRecord = record.unwrap();
+
+            let line: String = record.iter().collect::<Vec<&str>>().join(", ");
+            println!("{line}");
+        });
     // GOTO index based on ',' characters
     // remove all items in that specific column
 
