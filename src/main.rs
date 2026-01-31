@@ -35,7 +35,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .any(|header: &String| header.eq(&header_choice))
     {
         true => println!("Exists!"),
-        false => eprintln!("DOES NOT EXIST!"),
+        false => panic!("Header does not exist!"),
     };
     // work out index of header_choice in headers
     // calculate lines of file
